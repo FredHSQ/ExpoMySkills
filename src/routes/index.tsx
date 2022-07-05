@@ -5,7 +5,8 @@ import { Skills } from '../screens/skills';
 import { Loja } from '../screens/Loja';
 
 import IconeSkills from "../assets/icons/fact_check_FILL0_wght400_GRAD0_opsz48.png"
-import LojaIcon from '../assets/icons/storefront_FILL0_wght400_GRAD0_opsz48.png'
+import LojaIcon from '../assets/icons/storefront_FILL0_wght400_GRAD0_opsz48.png';
+import CarrinhoIcon from '../assets/icons/shopping_cart_FILL0_wght400_GRAD0_opsz48.png'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -65,7 +66,7 @@ export const Routes = () => {
                             <Image
                                 resizeMode='contain'
                                 style={{width: 30, tintColor: color }}
-                                source={LojaIcon}
+                                source={CarrinhoIcon}
                             />
                         )
                     }}

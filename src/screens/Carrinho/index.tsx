@@ -12,6 +12,7 @@ export const Carrinho = () => {
     const [preco, setPreco] = useState<string>();
 
     const listaItemMagico = useContext(ContextoCarrinho).listaItemMagico;
+    const precoTotal = useContext(ContextoCarrinho).precoTotal;
 
 
     return <View style={styles.container}>
@@ -28,6 +29,7 @@ export const Carrinho = () => {
                     setPreco={setPreco}
                     setVisibilidadeModal={setVisibilidadeModal}
                     setIndexItemMagico={setIndexItemMagico}
+                    carrinho={true}
                 />
             )
             }
@@ -38,7 +40,11 @@ export const Carrinho = () => {
                 visibilidadeModal={visibilidadeModal}
                 setVisibilidadeModal={setVisibilidadeModal}
                 preco={preco}
+                carrinho={true}
             />
         }
+        <Text style={styles.title}>
+            Preço Total: R$ {precoTotal},00
+        </Text>
     </View>
 }

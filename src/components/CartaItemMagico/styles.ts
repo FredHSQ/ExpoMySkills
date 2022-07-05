@@ -16,4 +16,9 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         width:"80%",
     },
+    closeIcon: {
+        tintColor: '#fff',
+        height: 25,
+        width: 25
+    },
 })

@@ -12,14 +12,15 @@ interface ModalAtributosProps extends ModalProps {
     visibilidadeModal: boolean,
     setVisibilidadeModal: React.Dispatch<React.SetStateAction<boolean>>,
     indexItemMagico: string,
-    preco?: string
+    preco?: string,
+    carrinho?:boolean
 }
 
-export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexItemMagico, preco }: ModalAtributosProps) => {
+export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexItemMagico, preco, carrinho }: ModalAtributosProps) => {
 
     const [reload, setReload] = useState<boolean>(false);
     const [carregando, setCarregando] = useState<boolean>(true);
-    const [itemMagico, setItemMagico] = useState<ItemMagico>({
+    const [itemMagicoDetalhes, setItemMagico] = useState<ItemMagico>({
         index: "",
         name: "",
         equipment_category: {
@@ -40,15 +41,15 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
         url: "",
     });
 
-    const setListaItemMagico = useContext(ContextoCarrinho).setListaItemMagico;
-    const listaItemMagicoCarrinho = useContext(ContextoCarrinho).listaItemMagico;
-    
-    const listaItemMagico: ListaItemMagico = {
-        index: itemMagico.index,
-        name: itemMagico.name,
-        url: itemMagico.url,
+    const adiconaItemCarrinho = useContext(ContextoCarrinho).adiconaItemCarrinho;
+    const retiraItemCarrinho = useContext(ContextoCarrinho).retiraItemCarrinho;
+
+    const itemMagico: ListaItemMagico = {
+        index: itemMagicoDetalhes.index,
+        name: itemMagicoDetalhes.name,
+        url: itemMagicoDetalhes.url,
         preco: preco ? preco : Math.floor(Math.random() * 10000).toString()
-    }
+    };
 
     useEffect(() => {
         setCarregando(true);
@@ -59,13 +60,19 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
         }).finally(() => {
             setCarregando(false);
         })
-    }, [reload, indexItemMagico])
+    }, [reload, indexItemMagico]);
+
+    
 
     function lidaBotao (){
-        setListaItemMagico([...listaItemMagicoCarrinho, listaItemMagico]);
-        setVisibilidadeModal(false);
+        if (carrinho) {
+            retiraItemCarrinho(itemMagico.index);
+            setVisibilidadeModal(false);
+        } else {
+            adiconaItemCarrinho(itemMagico);
+            setVisibilidadeModal(false);
+        }
     }
-
 
     return <Modal
         animationType="slide"
@@ -84,7 +91,7 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
                     <>
                         <View style={styles.titleContainer}>
                             <Text style={styles.title}>
-                                {itemMagico.name}
+                                {itemMagicoDetalhes.name}
                             </Text>
                             <TouchableOpacity onPress={() => setVisibilidadeModal(false)} style={{ alignContent: "flex-end", width: "10%" }}>
                                 <Image
@@ -100,7 +107,7 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
                                         Raridade:
                                     </Text>
                                     <Text style={styles.text}>
-                                        {itemMagico.rarity.name}
+                                        {itemMagicoDetalhes.rarity.name}
                                     </Text>
                                 </View>
                                 <View>
@@ -108,7 +115,7 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
                                         Tipo:
                                     </Text>
                                     <Text style={styles.text}>
-                                        {itemMagico.desc[0]}
+                                        {itemMagicoDetalhes.desc[0]}
                                     </Text>
                                 </View>
                                 <View style={styles.firstStats}>
@@ -116,7 +123,7 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
                                         Price:
                                     </Text>
                                     <Text style={styles.text}>
-                                        R$ {listaItemMagico.preco},00
+                                        R$ {itemMagico.preco},00
                                     </Text>
                                 </View>
                                 <View style={styles.descriptionContainer}>
@@ -124,15 +131,15 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
                                         Descrição:
                                     </Text>
                                     <Text style={styles.text}>
-                                        {itemMagico.desc[1]}
+                                        {itemMagicoDetalhes.desc[1]}
                                     </Text>
                                 </View>
-                                {itemMagico.desc[2] && <View style={styles.descriptionContainer}>
+                                {itemMagicoDetalhes.desc[2] && <View style={styles.descriptionContainer}>
                                     <Text style={styles.textTitle}>
                                         Informação adicional:
                                     </Text>
                                     <Text style={styles.text}>
-                                        {itemMagico.desc.map((text, index) => {
+                                        {itemMagicoDetalhes.desc.map((text, index) => {
                                             if (index > 1)
                                                 return text + " "
                                         }
@@ -144,7 +151,7 @@ export const ModalAtributos = ({ visibilidadeModal, setVisibilidadeModal, indexI
                         </ScrollView>
                     </>
                 }
-                <Botao titulo={"Comprar"} onPress={() => { lidaBotao() }} />
+                <Botao titulo={carrinho ? "Retirar do Carrinho" : "Comprar"} onPress={() => { lidaBotao() }} />
             </View>
         </View>
     </Modal>
